@@ -1,0 +1,56 @@
+
+# enable api service
+resource "google_project_service" "{{ resourceId }}" {
+  project = "{{ project }}"
+  service = "apigateway.googleapis.com"
+
+  disable_dependent_services = true
+}
+
+resource "google_api_gateway_api" "{{ resourceId }}" {
+  provider = google-beta
+  api_id   = "{{ resourceId }}"
+  project  = "{{ project }}"
+}
+
+resource "google_api_gateway_api_config" "{{ resourceId }}" {
+  provider = google-beta
+  project  = "{{ project }}"
+
+  api = google_api_gateway_api.{{ resourceId }}.api_id
+
+  gateway_config {
+    backend_config {
+      google_service_account = google_service_account.{{ resourceId }}.email
+    }
+  }
+
+  openapi_documents {
+    document {
+      path = "{{ openapiFile }}"
+      contents = base64encode(templatefile("../../example/{{ swaggerFile }}", {
+        INTEGRATION = <<EOL
+operationId: analyze
+      x-google-backend:
+        address: ${google_cloudfunctions_function.{{ function }}.https_trigger_url}
+        EOL
+      }))
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "google_api_gateway_gateway" "{{ resourceId }}" {
+  provider = google-beta
+  region   = "{{ region }}"
+  project  = "{{ project }}"
+
+  api_config = google_api_gateway_api_config.{{ resourceId }}.id
+
+  gateway_id = "{{ project }}-{{ resourceId }}-api-gateway"
+
+  depends_on = [google_api_gateway_api_config.{{ resourceId }}]
+}

@@ -1,0 +1,7 @@
+kind: TemplateDefinition
+metadata:
+  displayName: Main
+spec:
+  platforms:
+    - aws
+    - gcp

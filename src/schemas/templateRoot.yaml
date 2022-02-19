@@ -1,0 +1,20 @@
+kind: Schema
+metadata:
+  name: TemplateRoot
+spec:
+  spec:
+    type: dict
+    required: true
+    schema:
+      main:
+        type: string
+        required: true
+      versions:
+        type: string
+        required: true
+      templates:
+        type: list
+        required: false
+        nullable: true
+        schema:
+          type: string

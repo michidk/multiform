@@ -1,0 +1,58 @@
+kind: Schema
+metadata:
+  name: Architecture
+spec:
+  metadata:
+    type: dict
+    required: true
+    schema:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: false
+      labels:
+        type: dict
+        required: false
+  spec:
+    type: dict
+    required: true
+    schema:
+      platforms:
+        type: list
+        required: true
+        nullable: false
+        schema:
+          type: dict
+          required: true
+          schema:
+            name:
+              type: string
+              required: true
+            properties:
+              type: dict
+              required: false
+      components:
+        type: list
+        required: true
+        nullable: false
+        schema:
+          type: dict
+          required: true
+          schema:
+            name:
+              type: string
+              required: true
+            type:
+              type: string
+              required: true
+            properties:
+              type: dict
+              required: false
+              nullable: true
+              valuesrules:
+                anyof:
+                  - type: string
+                  - type: reference
+                  - type: dict

@@ -1,0 +1,47 @@
+kind: Schema
+metadata:
+  name: TemplateDefinition
+spec:
+  metadata:
+    type: dict
+    schema:
+      displayName:
+        type: string
+        required: false
+  spec:
+    type: dict
+    required: true
+    schema:
+      platforms:
+        type: list
+        required: true
+        schema:
+          oneof:
+            - type: string
+              # string is platform name; assumses file templates/<type>/<platform>.tf.j2
+            - type: dict
+              maxlength: 1
+              keysrules:
+                # platform name
+                type: string
+                required: true
+              valuesrules:
+                # template list
+                type: list
+                required: true
+                schema:
+                  type: string
+                  required: true
+      properties:
+        type: dict
+        required: false
+        nullable: true
+        # schema:
+        #   type: dict
+        #   maxlength: 1
+        #   keysrules:
+        #     type: string
+        #     required: true
+        #   valuesrules:
+        #     type: string
+        #     required: true

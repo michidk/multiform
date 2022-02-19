@@ -1,0 +1,7 @@
+kind: TemplateDefinition
+metadata:
+  displayName: Versions
+spec:
+  platforms:
+    - aws
+    - gcp

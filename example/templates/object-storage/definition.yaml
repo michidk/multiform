@@ -1,0 +1,11 @@
+kind: TemplateDefinition
+metadata:
+  displayName: ObjectStorage
+spec:
+  properties:
+    uniqueName:
+      type: string
+      required: true
+  platforms:
+    - aws
+    - gcp

@@ -1,0 +1,41 @@
+resource "aws_apigatewayv2_api" "{{ resourceId }}" {
+  name          = "{{ uniqueName }}-api"
+  protocol_type = "HTTP"
+
+  body = templatefile("../../example/{{ openapiFile }}", {
+    INTEGRATION = <<EOT
+x-amazon-apigateway-integration:
+          payloadFormatVersion: "1.0"
+          type: "aws_proxy"
+          httpMethod: "POST"
+          uri: "${aws_lambda_function.{{ function }}.invoke_arn}"
+          connectionType: "INTERNET"
+                EOT
+  })
+
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_methods = ["*"]
+    allow_headers = ["*"]
+  }
+}
+
+resource "aws_apigatewayv2_stage" "{{ resourceId }}" {
+  name        = "{{ uniqueName }}-api-stage"
+  api_id      = aws_apigatewayv2_api.{{ resourceId }}.id
+  auto_deploy = true
+
+  default_route_settings {
+    throttling_burst_limit = 10
+    throttling_rate_limit  = 10
+  }
+}
+
+resource "aws_lambda_permission" "{{ resourceId }}" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.{{ function }}.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_apigatewayv2_api.{{ resourceId }}.execution_arn}/*/*"
+}

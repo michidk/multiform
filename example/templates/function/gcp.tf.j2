@@ -1,0 +1,46 @@
+# Enable Cloud Functions API
+resource "google_project_service" "{{ resourceId }}_functions" {
+  project = "{{ project }}"
+  service = "cloudfunctions.googleapis.com"
+
+  disable_dependent_services = true
+}
+
+# Enable Cloud Build API
+resource "google_project_service" "{{ resourceId }}_build" {
+  project = "{{ project }}"
+  service = "cloudbuild.googleapis.com"
+
+  disable_dependent_services = true
+}
+
+
+resource "google_cloudfunctions_function" "{{ resourceId }}" {
+  name    = "{{ resourceId }}"
+  project = "{{ project }}"
+  region  = "{{ region }}"
+
+  description           = "{{ resourceId }}-function"
+
+  {% if language | lower == "javascript" or language | lower == "typescript"  %}
+  runtime = "nodejs14"
+  {% elif language | lower == "python" %}
+  runtime = "python39"
+  {% elif language | lower == "java" %}
+  runtime = "java11"
+  {% elif language | lower == "dotnet" %}
+  runtime = "dotnetcore3"
+  {% elif language | lower == "go" %}
+  runtime = "go113"
+  {% elif language | lower == "ruby" %}
+  runtime = "ruby27"
+  {% endif %}
+
+  available_memory_mb   = 128
+  {% if source %}
+  source_archive_bucket = google_storage_bucket.{{ source.bucket }}.name
+  source_archive_object = "{{ source.object }}"
+  {% endif %}
+  trigger_http          = true
+  entry_point           = "handler"
+}

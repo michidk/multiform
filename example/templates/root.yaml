@@ -1,0 +1,9 @@
+kind: TemplateRoot
+spec:
+  main: main/
+  versions: versions/
+  templates:
+    - object-storage/
+    - cdn/
+    - function/
+    - api-gateway/

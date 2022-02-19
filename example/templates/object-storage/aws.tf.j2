@@ -1,0 +1,17 @@
+resource "aws_s3_bucket" "{{ resourceId }}" {
+  bucket        = "{{ uniqueName }}-bucket"
+  force_destroy = "false"
+}
+
+output "{{ resourceId }}_bucket_domain" {
+  value = aws_s3_bucket.{{ resourceId }}.bucket_regional_domain_name
+}
+
+resource "aws_s3_bucket_public_access_block" "{{ resourceId }}" {
+  bucket = aws_s3_bucket.{{ resourceId }}.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}

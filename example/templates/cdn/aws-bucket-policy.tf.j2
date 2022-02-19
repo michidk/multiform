@@ -1,0 +1,16 @@
+data "aws_iam_policy_document" "{{ resourceId }}" {
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.{{ target }}.arn}/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.{{ resourceId }}.iam_arn]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "{{ resourceId }}" {
+  bucket = aws_s3_bucket.{{ target }}.id
+  policy = data.aws_iam_policy_document.{{ resourceId }}.json
+}

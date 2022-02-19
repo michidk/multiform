@@ -1,0 +1,32 @@
+kind: TemplateDefinition
+metadata:
+  displayName: Function
+spec:
+  properties:
+    uniqueName:
+      type: string
+      required: true
+    language:
+      type: string
+      required: true
+      allowed:
+        - javascript
+        - typescript
+        - python
+        - java
+        - dotnet
+        - go
+        - ruby
+    source:
+      type: dict
+      required: false # it's optional for aws, but not gcp
+      schema:
+        bucket:
+          type: reference
+          required: true
+        object:
+          type: string
+          required: true
+  platforms:
+    - aws
+    - gcp

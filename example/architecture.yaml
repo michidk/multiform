@@ -1,0 +1,45 @@
+kind: Architecture
+metadata:
+  name: simple-web-service
+  version: v1.0.0
+  labels:
+    app: custom-app
+spec:
+  platforms:
+    - name: aws
+      properties:
+        region: us-east-1
+    - name: gcp
+      properties:
+        region: us-central1
+        location: US
+        project: master-thesis-345116
+  components:
+    - name: frontend
+      type: object-storage
+      properties:
+        uniqueName: 23423455-static-web-files
+    - name: cdn
+      type: cdn
+      properties:
+        uniqueName: 23423455-cdn
+        target: !ref frontend
+    - name: backend-code
+      type: object-storage
+      properties:
+        uniqueName: 23423-faas-files
+    - name: backend-faas
+      type: function
+      properties:
+        uniqueName: 23423455-faas-backend
+        language: javascript
+        source:
+          bucket: !ref backend-code
+          object: function.zip
+    - name: api
+      type: api-gateway
+      properties:
+        uniqueName: 23423455-api-gateway
+        function: !ref backend-faas
+        openapiFile: openapi.yaml
+        swaggerFile: swagger.yaml

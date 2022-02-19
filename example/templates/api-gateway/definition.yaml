@@ -1,0 +1,22 @@
+kind: TemplateDefinition
+metadata:
+  displayName: ApiGateway
+spec:
+  properties:
+    uniqueName:
+      type: string
+      required: true
+    function:
+      type: reference
+      required: true
+    openapiFile:
+      type: string
+      required: true
+    swaggerFile:
+      type: string
+      required: true
+  platforms:
+    - aws
+    - gcp:
+      - gcp-service-account
+      - gcp

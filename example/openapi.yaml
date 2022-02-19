@@ -1,0 +1,21 @@
+openapi: "3.0.2"
+info:
+  title: string-analyzer-api
+  description: An API for analysing strings
+  version: 1.0.0
+paths:
+  /analyze:
+    get:
+      summary: String Analysis
+      description: An API route that returns statistics of the given string
+      parameters:
+        - in: query
+          name: input
+          description: The input string
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Successful response
+      ${INTEGRATION}

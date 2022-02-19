@@ -1,0 +1,20 @@
+swagger: '2.0'
+info:
+  description: An API for analysing strings
+  title: string-analyzer-api
+  version: 1.0.0
+paths:
+  /api/analyze:
+    get:
+      parameters:
+        - description: The input string
+          in: query
+          name: input
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+      description: An API route that returns statistics of the given string
+      summary: String Analysis
+      ${INTEGRATION}

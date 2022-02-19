@@ -1,0 +1,16 @@
+kind: TemplateDefinition
+metadata:
+  displayName: CDN
+spec:
+  properties:
+    uniqueName:
+      type: string
+      required: true
+    target:
+      type: reference
+      required: true
+  platforms:
+    - aws:
+      - aws-bucket-policy
+      - aws
+    - gcp

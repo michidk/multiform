@@ -1,0 +1,8 @@
+resource "google_storage_bucket" "{{ resourceId }}" {
+  name     = "{{ uniqueName }}"
+  location = "{{ location }}"
+}
+
+output "{{ resourceId }}_bucket_link" {
+  value = google_storage_bucket.{{ resourceId }}.self_link
+}
