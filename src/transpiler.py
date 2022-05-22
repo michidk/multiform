@@ -3,7 +3,6 @@ Transpiles templates to terraform files
 """
 
 import os
-import subprocess
 
 import jinja2
 import yaml
@@ -11,13 +10,13 @@ from loguru import logger
 
 from . import utils
 from .architecture import ArchitectureConfig
-from .schema import Schema
+from .common import init
+from .schema import Schema, SchemaRegistry
 from .tags import get_report_dumper
 from .template import TemplateDefinition, TemplateRoot
 
 TEMPLATE_ROOT_FILE: str = "root.yaml"
 TEMPLATE_DEFINITION_FILE: str = "definition.yaml"
-SCHEMA_DIR: str = "src/schemas"
 
 
 def read_template_dir(
@@ -43,27 +42,14 @@ def transpile(
     mappings: list = []
     stats: dict = {"outputFiles": 0}
 
-    logger.info("Initializing...")
+    jinja: jinja2.Environment
+    schema_registry: SchemaRegistry
+    architecture: ArchitectureConfig
+    jinja, schema_registry, architecture = init(input_file)
 
-    # setup templating engine
-    env = jinja2.Environment(
-        loader=jinja2.BaseLoader(),
-    )
-
-    # read & validate schemas
-    logger.info("Reading and validation schemas...")
-    schema_registry: dict[str, Schema] = Schema.load_all(SCHEMA_DIR)
     root: TemplateRoot = TemplateRoot.with_schema_registry(
         os.path.join(template_dir, TEMPLATE_ROOT_FILE), schema_registry
     )
-
-    # load architecture definition
-    logger.info("Loading user-provided architecture definition file...")
-    # TODO: load from args
-    architecture: ArchitectureConfig = ArchitectureConfig.with_schema_registry(
-        input_file, schema_registry
-    )
-    # TODO: verify unique component names
 
     platforms: list[dict] = architecture.platforms()
     platform_names: list[str] = list(map(lambda x: x["name"], platforms))
@@ -110,7 +96,7 @@ def transpile(
         for special in ["main", "versions"]:
             files = read_template_dir(
                 template_dir, special, root[special], schema_registry
-            ).render(platform_name, env, component_data)
+            ).render(platform_name, jinja, component_data)
             for file in files:
                 path = file.save(folder, special)
                 mappings.append(
@@ -152,7 +138,7 @@ def transpile(
             platform_properties = platform_struct["properties"]
 
             folder = os.path.join(out_dir, platform_name)
-            files = template.render(platform_name, env, component_data)
+            files = template.render(platform_name, jinja, component_data)
             for file in files:
                 path = file.save(folder, component["name"])
 

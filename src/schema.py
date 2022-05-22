@@ -5,18 +5,22 @@ Contains the Schema class
 from __future__ import annotations
 
 import os
-from typing import Callable
+from typing import Callable, NewType
 
 from loguru import logger
 
 from . import utils
 from .config import YamlConfig
 
+SchemaRegistry = NewType("SchemaRegistry", dict[str, "Schema"])
+
 
 class Schema(YamlConfig):
     """
     Represents a schema in memory
     """
+
+    DEFAULT_SCHEMA_PATH: str = "src/schemas"
 
     def __init__(self, metadata: dict, spec: dict) -> None:
         super().__init__(metadata, spec)
@@ -90,11 +94,11 @@ class Schema(YamlConfig):
         return Schema(schema["metadata"], schema["spec"])
 
     @staticmethod
-    def load_all(path: str) -> dict[str, Schema]:
+    def load_all(path: str = DEFAULT_SCHEMA_PATH) -> SchemaRegistry:
         """
         Loads all schemas from `path`
         """
-        schemes: dict[str, Schema] = {}
+        schemes: SchemaRegistry = {}
 
         for file in os.listdir(path):
             file_path = os.path.join(path, file)
