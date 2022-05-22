@@ -5,10 +5,11 @@ Contains the architecture class
 from __future__ import annotations
 
 from collections import Counter
-from typing import Optional
+from typing import Optional, Tuple, Union
 
 from . import utils
 from .config import YamlConfig
+from .tags import RefTag
 
 
 class ArchitectureConfig(YamlConfig):
@@ -35,11 +36,29 @@ class ArchitectureConfig(YamlConfig):
 
     def check_naming_collisions(self) -> list[str]:
         """
-        Checks for naming collisions to ensure every component name is unique
+        Checks for naming collisions: ensure every component name is unique
         """
         names: list[str] = map(lambda x: x["name"], self.components())
         counter = Counter(names)
         return [i for i, j in counter.items() if j > 1]
+
+    def check_references(self) -> list[Tuple[str, str, str]]:
+        """
+        Validates all component references: ensure every reference points to a valid component
+        """
+        cnames: list[str] = list(map(lambda x: x["name"], self.components()))
+
+        invalid_refs: list[Tuple[str, str, str]] = []
+        for component in self.components():
+            if "properties" in component:
+                properties: dict[str, Union[str, dict, RefTag]] = component[
+                    "properties"
+                ]
+                for name, tag in utils.get_type_occurences(properties, RefTag):
+                    if not tag.value in cnames:
+                        invalid_refs.append((component["name"], name, tag.value))
+
+        return invalid_refs
 
     @staticmethod
     def with_schema_registry(
