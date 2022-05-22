@@ -8,6 +8,7 @@ spec:
       required: true
     target:
       type: reference
+      ref_type: object-storage
       required: true
   platforms:
     - aws:

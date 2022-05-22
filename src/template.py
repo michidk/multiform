@@ -13,6 +13,7 @@ from loguru import logger
 from . import utils
 from .config import YamlConfig
 from .schema import Schema
+from .validator import PropertyValidator
 
 
 class TemplateConfig(YamlConfig):
@@ -75,7 +76,7 @@ class TemplateDefinition(TemplateConfig):
         self.template_type = template_type
         self.template_files = template_files
 
-    def validate_properties(self, data: dict) -> bool:
+    def validate_properties(self, data: dict, components: list[dict]) -> bool:
         """
         Validates the properties of the template
         """
@@ -87,9 +88,11 @@ class TemplateDefinition(TemplateConfig):
                 return False
             else:
                 return True
-        success, errors = utils.validate(data, self.spec["properties"])
-
-        # TODO: validate references
+        success, errors = utils.validate(
+            data,
+            self.spec["properties"],
+            validator=PropertyValidator(components=components),
+        )
 
         if not success:
             logger.error(

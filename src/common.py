@@ -54,14 +54,4 @@ def load_architecture(
         )
         exit(1)
 
-    # check for invalid references
-    invalid_references: list[Tuple[str, str, str]] = architecture.check_references()
-    if len(invalid_references) >= 1:
-        for invalid_ref in invalid_references:
-            component_name, property_name, tag = invalid_ref
-            logger.error(
-                f"Found invalid reference in component {component_name} (targets have to be component names): {property_name}: !ref {tag}"
-            )
-            exit(1)
-
     return architecture

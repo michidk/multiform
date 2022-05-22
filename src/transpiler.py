@@ -12,7 +12,7 @@ from . import utils
 from .architecture import ArchitectureConfig
 from .common import init
 from .schema import Schema, SchemaRegistry
-from .tags import get_report_dumper
+from .tags import report_dumper
 from .template import TemplateDefinition, TemplateRoot
 
 TEMPLATE_ROOT_FILE: str = "root.yaml"
@@ -119,7 +119,9 @@ def transpile(
         component_properties = component.get("properties")
 
         # validate that all required component properties are set
-        if not template.validate_properties(component_properties):
+        if not template.validate_properties(
+            component_properties, architecture.components()
+        ):
             logger.error(f"Invalid properties for component '{component_name}'")
             exit(1)
 
@@ -178,6 +180,6 @@ def transpile(
                         "platforms": platform_names,
                         "mappings": mappings,
                     },
-                    Dumper=get_report_dumper(),
+                    Dumper=report_dumper(),
                 )
             )

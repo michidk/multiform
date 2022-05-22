@@ -23,6 +23,7 @@ spec:
       schema:
         bucket:
           type: reference
+          ref_type: object-storage
           required: true
         object:
           type: string

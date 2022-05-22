@@ -8,6 +8,7 @@ spec:
       required: true
     function:
       type: reference
+      ref_type: function
       required: true
     openapiFile:
       type: string

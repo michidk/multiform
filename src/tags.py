@@ -7,7 +7,7 @@ import yaml
 
 class RefTag(yaml.YAMLObject):
     """
-    Custom tag for referencing other components
+    Custom tag for referencing other components in architecture definitions
     """
 
     __yaml_tag = "!ref"
@@ -27,21 +27,21 @@ class RefTag(yaml.YAMLObject):
         return dumper.represent_scalar(cls.__yaml_tag, data.value)
 
 
-def get_loader():
+def architecture_loader():
     """Add constructors to PyYAML loader"""
     loader = yaml.SafeLoader
     loader.add_constructor("!ref", RefTag.from_yaml)
     return loader
 
 
-def get_dumper():
+def architecture_dumper():
     """Add representers to PyYAML dumper"""
     dumper = yaml.SafeDumper
     dumper.add_multi_representer(RefTag, RefTag.to_yaml)
     return dumper
 
 
-def get_report_dumper():
+def report_dumper():
     """Custom PyYAML dumper for reports"""
     dumper = yaml.SafeDumper
     dumper.ignore_aliases = lambda *args: True  # disable aliases

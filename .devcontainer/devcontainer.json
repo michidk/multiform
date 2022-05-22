@@ -31,7 +31,8 @@
 	"extensions": [
 		"ms-python.python",
 		"ms-python.vscode-pylance",
-		"znck.grammarly"
+		"znck.grammarly",
+		"Gruntfuggly.todo-tree"
 	],
 
 	"postCreateCommand": "pip3 install .",

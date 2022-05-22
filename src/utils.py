@@ -10,9 +10,6 @@ import cerberus
 import yaml
 from loguru import logger
 
-from .tags import get_loader
-from .validator import CustomValidator
-
 
 def load_text(path: str) -> str:
     """
@@ -26,13 +23,13 @@ def load_text(path: str) -> str:
         sys.exit(1)
 
 
-def load_yaml(path: str) -> dict:
+def load_yaml(path: str, loader: yaml.Loader = yaml.SafeLoader) -> dict:
     """
     Loads a yaml file from path and returns the data as a dict.
     """
     try:
         with open(path, "r", encoding="utf8") as stream:
-            return yaml.load(stream, Loader=get_loader())
+            return yaml.load(stream, Loader=loader)
     except FileNotFoundError:
         logger.exception(f"'{path}' not found")
         sys.exit(1)
@@ -41,12 +38,12 @@ def load_yaml(path: str) -> dict:
         sys.exit(1)
 
 
-def validate(data: dict, schema: dict) -> tuple[bool, dict]:
+def validate(
+    data: dict, schema: dict, validator: cerberus.Validator = cerberus.Validator()
+) -> tuple[bool, dict]:
     """
     Validates data against a schema.
     """
-    validator = CustomValidator()
-
     try:
         success = validator.validate(data, schema)
     except cerberus.schema.SchemaError:
@@ -56,20 +53,30 @@ def validate(data: dict, schema: dict) -> tuple[bool, dict]:
     return (success, validator.errors)
 
 
-def load_yaml_and_validate(path: str, schema: dict) -> tuple[bool, dict, dict]:
+def load_yaml_and_validate(
+    path: str,
+    schema: dict,
+    loader: yaml.Loader = yaml.SafeLoader,
+    validator: cerberus.Validator = cerberus.Validator(),
+) -> tuple[bool, dict, dict]:
     """
     Loads a yaml file from path and validates it against a schema.
     """
-    data = load_yaml(path)
-    success, errors = validate(data, schema)
+    data = load_yaml(path, loader)
+    success, errors = validate(data, schema, validator)
     return (success, errors, data)
 
 
-def load_yaml_and_validate_handle_errors(path: str, schema: dict) -> dict:
+def load_yaml_and_validate_handle_errors(
+    path: str,
+    schema: dict,
+    loader: yaml.Loader = yaml.SafeLoader,
+    validator: cerberus.Validator = cerberus.Validator(),
+) -> dict:
     """
     Loads a yaml file from path and validates it against a schema while handling the errors.
     """
-    success, errors, data = load_yaml_and_validate(path, schema)
+    success, errors, data = load_yaml_and_validate(path, schema, loader, validator)
     if not success:
         logger.error(f"Error parsing '{path}': {errors}")
         sys.exit(1)
