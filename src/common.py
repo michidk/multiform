@@ -31,9 +31,15 @@ def init(
     # load architecture definition
     logger.info("Loading user-provided architecture definition file...")
 
-    # TODO: verify unique component names
     architecture: ArchitectureConfig = ArchitectureConfig.with_schema_registry(
         architecture, schema_registry
     )
+
+    collisions: list[str] = architecture.check_naming_collisions()
+    if len(collisions) >= 1:
+        logger.error(
+            f"Found architecture component name collisions (names have to be unique): {collisions}"
+        )
+        exit(1)
 
     return env, schema_registry, architecture

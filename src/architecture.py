@@ -4,6 +4,7 @@ Contains the architecture class
 
 from __future__ import annotations
 
+from collections import Counter
 from typing import Optional
 
 from . import utils
@@ -31,6 +32,14 @@ class ArchitectureConfig(YamlConfig):
         Returns the list of components
         """
         return self.spec["components"]
+
+    def check_naming_collisions(self) -> list[str]:
+        """
+        Checks for naming collisions to ensure every component name is unique
+        """
+        names: list[str] = map(lambda x: x["name"], self.components())
+        counter = Counter(names)
+        return [i for i, j in counter.items() if j > 1]
 
     @staticmethod
     def with_schema_registry(
