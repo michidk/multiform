@@ -24,7 +24,7 @@ The relevant parts of this repository are:
 
 ## How it works
 
-This tool parses [Jinja](https://palletsprojects.com/p/jinja/) templates and instantiates the according to the architecture file. This file is a YAML file that generically describes the required cloud infrastructure. The templates have definition (YAML) files that describe the structure, inputs and platforms to the Terraform-Jinja (`.tf.j2`) templates. All YAML files are validated with [Cerberus](https://docs.python-cerberus.org/en/stable/) schemes.
+This tool parses [Jinja](https://palletsprojects.com/p/jinja/) templates and instantiates the according to the architecture file. This file is a YAML file that generically describes the required cloud infrastructure. The templates have definition (YAML) files that describe the structure, inputs and supported platforms of the Terraform-Jinja (`.tf.j2`) files. All YAML files are validated with [Cerberus](https://docs.python-cerberus.org/en/stable/) schemes.
 
 Example architecture file:
 
