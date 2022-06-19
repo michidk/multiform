@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/python:0-${VARIANT}
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive && apt-get -y --no-install-recommends install graphviz graphviz-dev
 
 # Get golang installed. See: https://stackoverflow.com/questions/52056387/how-to-install-go-in-alpine-linux
-ARG GOLANG_VERSION=1.17
+ARG GOLANG_VERSION=1.18
 RUN wget https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 RUN tar -C /usr/local -xzf go$GOLANG_VERSION.linux-amd64.tar.gz
 ENV PATH=$PATH:/usr/local/go/bin
