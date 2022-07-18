@@ -37,14 +37,6 @@ RUN which terraform && terraform version
 RUN curl -L https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 RUN which tflint && tflint --version
 
-# Install tfdocs
-RUN go install github.com/terraform-docs/terraform-docs@v0.15.0
-RUN which terraform-docs && terraform-docs --version
-
-# Install tfsec
-RUN go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
-RUN which tfsec && tfsec --version
-
 # Copy go installs to vscode user
 ENV PATH=$PATH:/home/vscode/go/bin/
 RUN mkdir -p /home/vscode/go/bin/ && cp -r root/go/bin/* /home/vscode/go/bin/

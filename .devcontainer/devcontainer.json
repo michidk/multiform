@@ -38,13 +38,13 @@
 	"postCreateCommand": "pip3 install .",
 
 	"remoteEnv": {
-		"PATH": ":${containerEnv:PATH}:/home/vscode/.local/lib/python3.10/site-packages"
+		"PATH": ":${containerEnv:PATH}:/root/.local/lib/python3.10/site-packages"
 	},
 
 	"mounts": [
-		"source=${localEnv:HOME}/.aws/,target=/home/vscode/.aws/,type=bind,consistency=delegated",
-		"source=${localEnv:HOME}/.azure/,target=/home/vscode/.azure/,type=bind,consistency=delegated",
-		"source=${localEnv:HOME}/.config/gcloud/,target=/home/vscode/.config/gcloud/,type=bind,consistency=delegated"
+		"source=${localEnv:HOME}/.aws/,target=/root/.aws/,type=bind,consistency=delegated",
+		"source=${localEnv:HOME}/.azure/,target=/root/.azure/,type=bind,consistency=delegated",
+		"source=${localEnv:HOME}/.config/gcloud/,target=/root/.config/gcloud/,type=bind,consistency=delegated"
 	],
 
 	// "remoteUser": "vscode",
