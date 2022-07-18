@@ -2,8 +2,7 @@ run:
     python3 start.py --verbosity trace transpile --architecture example/architecture.yaml --templates example/templates --report
 
 plot:
-    python3 start.py --verbosity trace plot --architecture example/architecture.yaml --out out/graph.dot
-    dot -Tjpg out/graph.dot -o out/graph.jpg
+    python3 start.py --verbosity trace plot --architecture example/architecture.yaml --out out/graph.jpg
 
 validate:
     cd ./out/aws && terraform validate

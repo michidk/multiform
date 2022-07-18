@@ -15,17 +15,17 @@ setup(
     version="1.0.0",
     author="Michael Lohr",
     author_email="michael@lohr.dev",
-    description=("A Multi-Cloud Templating System "),
+    description=("A Multi-Cloud Templating System"),
     long_description=read('README.md'),
     license="MIT",
     packages=['src'],
     install_requires=[
-        "Cerberus   == 1.3.4",
-        "Jinja2     == 3.1.1",
         "loguru     == 0.6.0",
-        "MarkupSafe == 2.1.1",
-        "pygraphviz ==   1.9",
         "PyYAML     ==   6.0",
+        "Jinja2     == 3.1.1",
+        "MarkupSafe == 2.1.1",
+        "Cerberus   == 1.3.4",
+        "pygraphviz ==   1.9",
     ],
     entry_points={
         "console_scripts": ["multiform=src.main:main"]
